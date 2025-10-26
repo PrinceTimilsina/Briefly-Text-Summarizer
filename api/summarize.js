@@ -1,13 +1,10 @@
-const fetch = require("node-fetch");
+import fetch from "node-fetch";
 
-module.exports = async (req, res) => {
+const HF_TOKEN = process.env.HF_TOKEN;
+
+export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
-  }
-
-  const HF_TOKEN = process.env.HF_TOKEN;
-  if (!HF_TOKEN) {
-    return res.status(500).json({ error: "HF_TOKEN missing in environment variables" });
   }
 
   const { text } = req.body;
@@ -34,16 +31,14 @@ module.exports = async (req, res) => {
     if (data.error && data.error.includes("currently loading")) {
       return res.status(503).json({
         error: "Model is loading. Please wait 20 seconds and try again.",
-        estimated_time: data.estimated_time,
+        estimated_time: data.estimated_time
       });
     }
 
-    if (data.error) {
-      return res.status(500).json({ error: data.error });
-    }
+    if (data.error) return res.status(500).json({ error: data.error });
 
     res.status(200).json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-};
+}
