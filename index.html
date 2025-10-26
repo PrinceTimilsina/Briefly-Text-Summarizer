@@ -1,0 +1,146 @@
+<!--Copyright@PrinceTimilsina-2025-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Briefly Text Summarizer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="logobriefly.png" />
+</head>
+<body>
+  <html>
+  <nav>
+    <div class="logo"> <img src="logobriefly.png" alt="" style="height: 30px;"> Briefly</div>
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+  <section class="hero-section" id="home">
+    <h1>
+      <span class="brand">Briefly text summarizer</span>
+      helps you save <span class="underline">time</span>
+    </h1>
+    <p class="subtitle">Get instant, intelligent summaries powered by AI </p>
+    <div class="main-card-container">
+      <div class="gradient-card">
+        <div class="card-content">
+          <div class="arrow-indicator">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 5 L12 19 M12 19 L6 13 M12 19 L18 13" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+
+          <h2 class="card-title">What is your request or topic?</h2>
+          
+          <textarea id="inputText" placeholder="Describe what you want or select a 'Text type'..."></textarea>
+
+          <div class="btn-container">
+            <button onclick="summarizeText()">Generate</button>
+          </div>
+
+          <div id="output"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features-section" id="features">
+    <div class="section-header">
+      <div class="section-label">CREATIVE APPROACH</div>
+      <h2 class="section-title">Too long? Let’s make it Briefly.</h2>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-box">
+        <span class="feature-icon">⚡</span>
+        <h3>Summarize Instantly</h3>
+        <p>Supporting multiple languages to help users worldwide create better content efficiently.</p>
+      </div>
+
+      <div class="feature-box">
+        <span class="feature-icon">🔍</span>
+        <h3>Research Made Easy</h3>
+        <p>Turn long articles, essays, or reports into quick insights to help you study and learn faster.</p>
+      </div>
+
+      <div class="feature-box">
+        <span class="feature-icon">💡</span>
+        <h3>Understand More, Read Less</h3>
+        <p>Quickly capture the key ideas from long documents, articles, or essays no extra reading needed.</p>
+      </div>
+
+
+    </div>
+  </section>
+
+  <footer id="contact">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h3>Briefly</h3>
+        <p>Empowering writers with AI-powered summarization <br> and content generation tools. Make your writing smarter,<br> faster, and more efficient.</p>
+        <h3 style="color: rgb(177, 177, 189);"> <i>“Summarize smarter with Briefly.”</i></h3>
+      </div>
+
+      <div class="footer-col">
+        <h3>Product</h3>
+        <div class="footer-links">
+          <a href="#features">Features</a>
+          <a href="https://en.wikipedia.org/wiki/Automatic_summarization">Use Cases</a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h3>Contact</h3>     
+      <div class="social-icons">
+          <a href="https://www.linkedin.com/in/princetimilsina/" target="_blank"><img src="linkedin logo.png" alt="" style="height: 30px;"></a>
+          <a href="https://github.com/PrinceTimilsina" target="_blank"><img src="githublogo.webp" alt="" style="height: 30px;"></a>
+          <a href="https://x.com/PrinceTimilsina"><img src="Twitter-new-logo.jpg" alt="" style="height: 30px;"></a>
+          <a href="https://www.instagram.com/iamprince7t/"><img src="instagram logo.png" alt="" style="height: 30px;"></a>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© PrinceTimilsina 2025. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    async function summarizeText() {
+      const text = document.getElementById("inputText").value.trim();
+      const outputDiv = document.getElementById("output");
+      
+      if (!text) {
+        outputDiv.innerText = "Please enter some text!";
+        return;
+      }
+      
+      outputDiv.innerText = "Processing...";
+      
+      try {
+        const res = await fetch("http://localhost:3000/summarize", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text })
+        });
+        
+        const data = await res.json();
+        
+        if (data[0] && data[0].summary_text) {
+          outputDiv.innerText = data[0].summary_text;
+        } else {
+          outputDiv.innerText = "No summary returned or an error occurred.";
+        }
+      } catch (err) {
+        outputDiv.innerText = "Error: " + err.message;
+      }
+    }
+  </script>
+</body>
+</html>
